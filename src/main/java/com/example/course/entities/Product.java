@@ -11,6 +11,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -33,10 +34,8 @@ public class Product implements Serializable {
     
     private Set<Category> categories = new HashSet<>();
 
-    /*@OneToMany
-    @ManyToMany
-    @JoinColumn(name = "/orders_id")
-    private Order orders; */
+    @OneToMany(mappedBy = "id.product")
+    private Set<OrderItem> items = new HashSet<>();
 
     public Product(){
     }
@@ -47,18 +46,17 @@ public class Product implements Serializable {
         this.description = description;
         this.price = price;
         this.imgUrl = imgUrl;
-        //this.orders = orders;
     }
 
-    public static long getSerialversionuid() {
+    /*public static long getSerialversionuid() {
         return serialVersionUID;
-    }
+    }*/
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -97,16 +95,7 @@ public class Product implements Serializable {
     public Set<Category> getCategories() {
         return categories;
     }
-
-
-    /*public Order getOrder() {
-        return orders;
-    }
-
-    public void setOrder(Order orders) {
-        this.orders = orders;
-    }*/
-
+    
     @Override
     public int hashCode() {
         final int prime = 31;
