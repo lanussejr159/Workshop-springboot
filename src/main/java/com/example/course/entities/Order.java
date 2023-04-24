@@ -2,6 +2,8 @@ package com.example.course.entities;
 
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.HashSet;
+import java.util.Set;
 
 import com.example.course.entities.enums.OrderStatus;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -11,8 +13,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-//import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -24,7 +26,7 @@ public class Order implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "GMT")
+    //@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "GMT")
     private Instant moment;
 
     private Integer orderStatus;
@@ -33,10 +35,9 @@ public class Order implements Serializable {
     @JoinColumn(name = "client_id")
     private User client;
 
-    /*@ManyToMany
-    @ManyToOne
-    @JoinColumn(name = "items_id")
-    private Product items;*/
+    @OneToMany(mappedBy = "id.order")
+    private Set<OrderItem> items = new HashSet<>();
+    
 
     public Order(){
     }
@@ -46,13 +47,12 @@ public class Order implements Serializable {
         this.moment = moment;
         setOrderStatus(orderStatus);
         this.client = client;
-        //this.items = items;
     }
 
     public Long getId() {
         return id;
     }
-//jesus
+
     public void setId(Long id) {
         this.id = id;
     }
@@ -75,21 +75,9 @@ public class Order implements Serializable {
         }
     }
 
-    public User getClient() {
-        return client;
-    }
-
-    public void setClient(User client) {
-        this.client = client;
-    }
-
-    /*public Product getProduct() {
+    public Set<OrderItem> getItems(){
         return items;
     }
-
-    public void setProduct(Product items) {
-        this.items = items ;
-    }*/
 
     @Override
     public int hashCode() {
